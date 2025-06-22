@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using WebApplicationMVC.Migrations;
 
 #nullable disable
 
 namespace WebApplicationMVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250621213758_Initial")]
+    [Migration("20250622174528_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
