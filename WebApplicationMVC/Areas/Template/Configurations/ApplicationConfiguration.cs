@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace WebApplicationMVC.Areas.Template.Configurations
+﻿namespace WebApplicationMVC.Areas.Template.Configurations
 {
     public static class ApplicationConfiguration
     {

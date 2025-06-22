@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApplicationMVC.Areas.Administration.Models;
 using WebApplicationMVC.Areas.Administration.Models.ViewModels;
 using WebApplicationMVC.Areas.Template.Extensions;
 using WebApplicationMVC.Models;
@@ -48,7 +47,7 @@ namespace WebApplicationMVC.Areas.Administration.Controllers
                 foreach (var user in model.Users)
                 {
                     var userRoles = await _userManager.GetRolesAsync(user);
-                    
+
                     if (!userRoles.Intersect(roles).Any())
                     {
                         users.Remove(user);

@@ -5,10 +5,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using WebApplicationMVC.Areas.Template.Extensions;
 using WebApplicationMVC.Models;
 using WebApplicationMVC.Models.ViewModels;
