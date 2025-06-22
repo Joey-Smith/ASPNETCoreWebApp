@@ -1,0 +1,47 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Username" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Username">Username</label>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-check mb-3">
+                <input asp-for="Disabled" type="checkbox" class="form-check-input" aria-required="true" />
+                <label asp-for="Disabled" class="form-check-label">Disabled</label>
+                <span asp-validation-for="Disabled" class="text-danger"></span>
+            </div>
+
+            <hr />
+
+            <h3>Roles</h3>
+
+            @for (var index = 0; index < Model.Roles.Count(); index++)
+            {
+                <div class="row">
+                    <div class="col-auto">
+                        <input asp-for="@Model.Roles[index].Selected" type="checkbox" class="form-check-input" aria-required="true" />
+                        <label asp-for="@Model.Roles[index].Selected" class="form-check-label">@Model.Roles[index].Text</label>
+                        <span asp-validation-for="@Model.Roles[index].Selected" class="text-danger"></span>
+                        <input type="hidden" asp-for="@Model.Roles[index].Text" />
+                    </div>
+                </div>
+            }
+
+            <button id="save" type="submit" class="w-100 btn-lg btn btn-primary mt-3">Save</button>
+        </form>
+    </div>
+</div>

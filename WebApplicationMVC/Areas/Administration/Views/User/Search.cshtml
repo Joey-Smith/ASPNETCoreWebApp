@@ -1,0 +1,26 @@
+﻿@model WebApplicationMVC.Areas.Administration.Models.ViewModels.SearchViewModel
+@{
+    ViewData["Title"] = "Search Users";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-8">Username</div>
+    <div class="col-4">Action</div>
+</div>
+
+<hr />
+
+<div class="rowList">
+    @foreach (var user in Model.Users)
+    {
+        <div class="row rounded pb-2 pt-2">
+            <div class="col-8">@user.UserName</div>
+            <div class="col-4">
+                <a class="btn btn-primary" asp-area="Administration" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+                <a class="btn btn-danger" asp-area="Administration" asp-controller="User" asp-action="Delete">Delete</a>
+            </div>
+        </div>
+    }
+</div>
