@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplicationMVC.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/palette.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -31,7 +30,6 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-
                         @if (User.IsInRole("Administration"))
                         {
                             <li class="nav-item dropdown">

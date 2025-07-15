@@ -40,15 +40,15 @@ else
     app.UseHsts();
 }
 
-app.Use(async (context, next) =>
-{
-    await next();
+//app.Use(async (context, next) =>
+//{
+//    await next();
 
-    if (context.Response.StatusCode >= 400)
-    {
-        context.Response.Redirect("/Home/Error?statusCode=" + context.Response.StatusCode);
-    }
-});
+//    if (context.Response.StatusCode >= 400)
+//    {
+//        context.Response.Redirect("/Home/Error?statusCode=" + context.Response.StatusCode);
+//    }
+//});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
