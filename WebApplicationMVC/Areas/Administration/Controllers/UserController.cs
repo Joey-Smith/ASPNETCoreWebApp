@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Encodings.Web;
 using WebApplicationMVC.Areas.Administration.Models.ViewModels;
 using WebApplicationMVC.Areas.Template.Extensions;
 using WebApplicationMVC.Models;
 using WebApplicationMVC.Models.ViewModels;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace WebApplicationMVC.Areas.Administration.Controllers
 {
@@ -16,15 +19,18 @@ namespace WebApplicationMVC.Areas.Administration.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IEmailSender _emailSender;
 
         public UserController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _emailSender = emailSender;
         }
         public IActionResult Search()
         {
@@ -106,6 +112,72 @@ namespace WebApplicationMVC.Areas.Administration.Controllers
             TempData.Put<StatusMessageViewModel>("StatusMessage", new StatusMessageViewModel("User update failed.", StatusType.Error));
 
             return View(model);
+        }
+
+        public IActionResult ConfirmMassNewAccountEmails()
+        {
+            MassNewAccountViewModel massNewAccountViewModel = new MassNewAccountViewModel()
+            {
+                //Count = _userManager.Users.Where(u => string.IsNullOrEmpty(u.PasswordHash)).Count()
+                Count = _userManager.Users.Count()
+            };
+
+            return View(massNewAccountViewModel);
+        }
+        public IActionResult MassNewAccountEmails()
+        {
+            SendMassNewAccountEmails();
+
+            TempData.Put<StatusMessageViewModel>("StatusMessage", new StatusMessageViewModel("Mass email process has begun.", StatusType.Success));
+
+            return RedirectToAction("Index", "Home", new { area = "" });
+        }
+
+        public async void SendMassNewAccountEmails()
+        {
+            // This method is intended to send mass emails to users who have not yet set their password.
+            //var users = _userManager.Users.Where(u => string.IsNullOrEmpty(u.PasswordHash)).ToList();
+            var users = _userManager.Users.ToList();
+
+            if (users == null || users.Count == 0)
+            {
+                Console.WriteLine("No users found without a password.");
+                return;
+            }
+
+            Console.WriteLine($"Found {users.Count} users without a password. Sending emails...");
+
+            try
+            {
+                foreach (var user in users)
+                {
+                    await _userManager.GeneratePasswordResetTokenAsync(user).ContinueWith(tokenTask =>
+                    {
+                        var token = tokenTask.Result;
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            // Here you would typically send the email with the reset token.
+                            // For example, using an email service to send the token to the user's email address.
+                            // This is a placeholder for the actual email sending logic.
+                            var callbackUrl = Url.Page(
+                                "/Account/ResetPassword",
+                                pageHandler: null,
+                                values: new { token },
+                                protocol: Request.Scheme);
+
+                            _emailSender.SendEmailAsync(
+                                user.Email,
+                                "Reset Password",
+                                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                            Console.WriteLine($"Email sent to {user.Email} with reset token: {token}");
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while sending emails: {ex.Message}");
+            }
         }
     }
 }

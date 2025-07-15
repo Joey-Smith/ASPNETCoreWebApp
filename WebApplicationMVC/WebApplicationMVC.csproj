@@ -20,8 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administration\Data\" />
-    <Folder Include="Areas\Administration\Views\" />
-    <Folder Include="Areas\Template\" />
     <Folder Include="Migrations\SQL\" />
   </ItemGroup>
 

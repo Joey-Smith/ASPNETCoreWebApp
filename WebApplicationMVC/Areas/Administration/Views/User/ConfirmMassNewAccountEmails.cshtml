@@ -1,0 +1,20 @@
+﻿@model MassNewAccountViewModel  
+@{  
+    ViewData["Title"] = "Mass New Account Emails";  
+}  
+
+<h1>@ViewData["Title"]</h1>  
+
+<div class="row">  
+    <div class="col">  
+        <p>@Model.Count users found without a set password. Completion will take approximately @((int)(Math.Ceiling((double)Model.Count / 100) * 5)) minutes. Would you like to begin the email process?</p>  
+    </div>  
+</div>  
+<div class="row">  
+    <div class="col">  
+        <a class="btn btn-secondary" asp-area="" asp-controller="Home" asp-action="Index">Back</a>  
+    </div>  
+    <div class="col">  
+        <a class="btn btn-danger" asp-area="Administration" asp-controller="User" asp-action="MassNewAccountEmails">Yes</a>
+    </div>  
+</div>

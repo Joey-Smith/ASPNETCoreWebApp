@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using WebApplicationMVC.Areas.Template.Configurations;
 using WebApplicationMVC.Areas.Template.Services;
 using WebApplicationMVC.Migrations;
@@ -24,6 +25,17 @@ ApplicationConfiguration.Initialize(builder.Configuration.GetSection("Applicatio
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<MonitorLoop>();
+builder.Services.AddHostedService<QueuedHostedService>();
+builder.Services.AddSingleton<IBackgroundTaskQueue>(ctx =>
+{
+    if (!int.TryParse(hostContext.Configuration["QueueCapacity"], out var queueCapacity))
+        queueCapacity = 100;
+    return new BackgroundTaskQueue(queueCapacity);
+});
+
+var monitorLoop = host.Services.GetRequiredService<MonitorLoop>();
+monitorLoop.StartMonitorLoop();
 
 var app = builder.Build();
 
@@ -31,7 +43,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    app.UseExceptionHandler("/Home/Error");
 }
 else
 {
